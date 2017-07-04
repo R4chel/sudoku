@@ -27,3 +27,11 @@ let square t =
   | ( 6 | 7 | 8 ), ( 3 | 4 | 5 ) -> 7
   | ( 6 | 7 | 8 ), ( 6 | 7 | 8 ) -> 8
   | _ -> failwith "invalid row or column"
+;;
+
+let to_string t =
+  match t.value with
+  | Some value -> Int.to_string value
+  | None -> "_"
+;;
+ 

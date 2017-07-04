@@ -33,5 +33,18 @@ let complete t =
   validate t && cells_filled t = Id.n * Id.n
 ;;
 
+let print t = 
+  List.iter Id.rows ~f:(fun row_id ->
+    by_id t row_id
+    |> List.sort ~cmp:(fun (cell1 : Cell.t) cell2 -> Int.compare cell1.column cell2.column)
+    |> List.map ~f:Cell.to_string
+    |> String.concat ~sep:" "
+    |> Out_channel.output_string stdout;
+    Out_channel.newline stdout
+    )
+;;
+
+
 let () =
-  Out_channel.output_string stdout "hello world!"
+  let new_board = Cell.all_cells in
+  print new_board
