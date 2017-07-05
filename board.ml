@@ -45,8 +45,15 @@ let print t =
     )
 ;;
 
+let new_board = Cell.Map.empty
+;;
+
+let set t value row_id column_id =
+  Cell.Map.add t ~key:(Cell.of_row_column_ids row_id column_id) ~data:value
+
+
 
 let () =
-  let new_board = Cell.Map.empty in
+  let new_board = new_board in
   print new_board
 ;;
