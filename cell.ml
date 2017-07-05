@@ -1,18 +1,30 @@
 open Core
 
-type t =
-  { row    : int
-  ; column : int
-  ; value  : int option
-  }
-  [@@deriving fields]
+module T = struct 
+  type t =
+    { row    : int
+    ; column : int
+    }
+    [@@deriving hash, sexp, fields, compare]
+  end
+  let compare = compare
+  let hash = Hashtbl.hash
+include T
+include Hashable.Make (T)
+include Comparable.Make(T)
 
-let all_cells =
+let all =
   List.fold (List.range 0 9) ~init:[] ~f:(fun l row ->
       List.fold (List.range 0 9) ~init:l ~f:(fun l' column ->
-          { row ; column ; value = None } :: l'
+          { row
+          ; column
+          } :: l'
         )
     )
+;;
+
+let column_compare t1 t2 =
+  Int.compare t1.column t2.column
 ;;
 
 let square t =
@@ -28,10 +40,8 @@ let square t =
   | ( 6 | 7 | 8 ), ( 6 | 7 | 8 ) -> 8
   | _ -> failwith "invalid row or column"
 ;;
-
-let to_string t =
-  match t.value with
-  | Some value -> Int.to_string value
-  | None -> "_"
-;;
  
+let of_row_column_ids ~row ~column =
+  match row, column with
+  | Id.Row row, Id.Column column -> { row ; column }
+  | _ -> failwith "Invalid arguments"

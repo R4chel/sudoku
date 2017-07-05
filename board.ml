@@ -1,31 +1,30 @@
 open Core
 
-type t = Cell.t List.t
+type t = int Cell.Map.t
 
 let by_id t (id : Id.t) =
-  List.filter t ~f:(fun (cell : Cell.t) ->
+  Map.filter_keys t ~f:(fun (cell : Cell.t) ->
       match id with
-      | Row r -> cell.row = r
-      | Column c -> cell.column = c
+      | Row r    -> Cell.row    cell = r
+      | Column c -> Cell.column cell = c
       | Square s -> Cell.square cell = s
     )
 ;;
 
 let validate_by_id t id =
-  let row = by_id t id in
-  assert (List.length row = Id.n);
-  List.filter_map row ~f:Cell.value
+  by_id t id
+  |> Cell.Map.data 
   |> List.contains_dup
   |> not
 ;;
 
 let cells_filled t =
-  List.count t ~f:(fun (cell : Cell.t) -> Option.is_some cell.value)
+  Cell.Map.length t 
 ;;
 
 let validate t =
   List.for_all Id.all ~f:(fun id ->
-      validate_by_id t id
+    validate_by_id t id
   )
 ;;
 
@@ -35,9 +34,11 @@ let complete t =
 
 let print t = 
   List.iter Id.rows ~f:(fun row_id ->
-    by_id t row_id
-    |> List.sort ~cmp:(fun (cell1 : Cell.t) cell2 -> Int.compare cell1.column cell2.column)
-    |> List.map ~f:Cell.to_string
+    List.map Id.columns ~f:(fun column_id ->
+      match Cell.Map.find t (Cell.of_row_column_ids ~row:row_id ~column:column_id) with
+      | Some value -> Int.to_string value
+      | None -> "_"
+    )
     |> String.concat ~sep:" "
     |> Out_channel.output_string stdout;
     Out_channel.newline stdout
@@ -46,5 +47,6 @@ let print t =
 
 
 let () =
-  let new_board = Cell.all_cells in
+  let new_board = Cell.Map.empty in
   print new_board
+;;
