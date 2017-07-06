@@ -9,4 +9,5 @@ val column : t -> int
 val square : t -> int 
 val column_compare : t -> t -> int
 val of_row_column_ids : row_id : Id.t -> column_id : Id.t -> t
-
+val not_intersecting : t -> t -> bool
+val all_by_id : Id.t -> t List.t

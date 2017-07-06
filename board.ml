@@ -9,11 +9,15 @@ let by_id t (id : Id.t) =
       | Column c -> Cell.column cell = c
       | Square s -> Cell.square cell = s
     )
+;;
+
+let values_by_id t id =
+  by_id t id
   |> Cell.Map.data
 ;;
 
 let validate_by_id t id =
-  by_id t id
+  values_by_id t id
   |> List.contains_dup
   |> not
 ;;
