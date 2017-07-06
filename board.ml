@@ -1,6 +1,6 @@
 open Core
 
-type t = int Cell.Map.t
+type t = Value.t Cell.Map.t
 
 let by_id t (id : Id.t) =
   Map.filter_keys t ~f:(fun (cell : Cell.t) ->
@@ -33,6 +33,7 @@ let complete t =
 ;;
 
 let print t = 
+  Out_channel.newline stdout;
   List.iter Id.rows ~f:(fun row_id ->
     List.map Id.columns ~f:(fun column_id ->
       match Cell.Map.find t (Cell.of_row_column_ids ~row:row_id ~column:column_id) with
@@ -48,12 +49,7 @@ let print t =
 let new_board = Cell.Map.empty
 ;;
 
-let set t value row_id column_id =
+let set t value ~row_id ~column_id =
+  assert (Value.valid value);
   Cell.Map.add t ~key:(Cell.of_row_column_ids row_id column_id) ~data:value
-
-
-
-let () =
-  let new_board = new_board in
-  print new_board
 ;;

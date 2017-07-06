@@ -1,7 +1,7 @@
 (jbuild_version 1)
 
 (executables
-  ((names (board generate))
+  ((names (game board))
   (libraries (core
   ))
   (preprocess (pps (ppx_jane ppx_driver.runner)))

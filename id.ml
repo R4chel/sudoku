@@ -18,3 +18,5 @@ let squares =
    
 let all =
   rows @ columns @ squares
+
+let values = List.range 1 (n + 1)
