@@ -1,6 +1,7 @@
 open Core
 
 let () =
-  let boards = Generate.read_boards () in
-  Board.print (List.hd_exn boards)
+  let board = Generate.get_board () in
+  let board = Solver.solve board in
+  Board.print board;
 ;;

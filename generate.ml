@@ -4,7 +4,7 @@ let rec set_row (board : Board.t) row_id =
   let row = List.permute Id.values in
   let new_board : Board.t =
     List.fold2_exn Id.columns row ~init:board ~f:(fun board column_id value ->
-      Board.set board value ~row_id ~column_id
+      Board.set_by_ids board value ~row_id ~column_id
   )
   in
   if Board.validate new_board
@@ -28,7 +28,7 @@ let parse_one_board grid =
     in
     List.fold2_exn Id.columns nums ~init:board ~f:(fun board column_id num ->
         if num <> 0
-        then Board.set board num ~row_id ~column_id
+        then Board.set_by_ids board num ~row_id ~column_id
         else board
       )
     )

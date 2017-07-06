@@ -9,11 +9,11 @@ let by_id t (id : Id.t) =
       | Column c -> Cell.column cell = c
       | Square s -> Cell.square cell = s
     )
+  |> Cell.Map.data
 ;;
 
 let validate_by_id t id =
   by_id t id
-  |> Cell.Map.data 
   |> List.contains_dup
   |> not
 ;;
@@ -28,6 +28,11 @@ let validate t =
   )
 ;;
 
+let empty_cells t =
+  Cell.Set.diff Cell.all (Cell.Set.of_list (Cell.Map.keys t))
+;;
+
+
 let complete t =
   validate t && cells_filled t = Id.n * Id.n
 ;;
@@ -36,20 +41,30 @@ let print t =
   Out_channel.newline stdout;
   List.iter Id.rows ~f:(fun row_id ->
     List.map Id.columns ~f:(fun column_id ->
-      match Cell.Map.find t (Cell.of_row_column_ids ~row:row_id ~column:column_id) with
+      match Cell.Map.find t (Cell.of_row_column_ids ~row_id ~column_id) with
       | Some value -> Int.to_string value
       | None -> "_"
     )
     |> String.concat ~sep:" "
     |> Out_channel.output_string stdout;
     Out_channel.newline stdout
-    )
+  )
 ;;
 
 let new_board = Cell.Map.empty
 ;;
 
-let set t value ~row_id ~column_id =
+let set_by_ids t value ~row_id ~column_id =
   assert (Value.valid value);
   Cell.Map.add t ~key:(Cell.of_row_column_ids row_id column_id) ~data:value
+;;
+
+let set t value cell =
+  assert (Value.valid value);
+  Cell.Map.add t ~key:cell ~data:value
+;;
+
+let num_empty t =
+  empty_cells t
+  |> Set.length
 ;;

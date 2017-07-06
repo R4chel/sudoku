@@ -14,11 +14,9 @@ include Hashable.Make (T)
 include Comparable.Make(T)
 
 let all =
-  List.fold (List.range 0 9) ~init:[] ~f:(fun l row ->
-      List.fold (List.range 0 9) ~init:l ~f:(fun l' column ->
-          { row
-          ; column
-          } :: l'
+  List.fold (List.range 0 9) ~init:Set.empty ~f:(fun s row ->
+      List.fold (List.range 0 9) ~init:s ~f:(fun s' column ->
+          Set.add s' { row ; column }
         )
     )
 ;;
@@ -41,7 +39,8 @@ let square t =
   | _ -> failwith "invalid row or column"
 ;;
  
-let of_row_column_ids ~row ~column =
-  match row, column with
+let of_row_column_ids ~row_id ~column_id =
+  match row_id, column_id with
   | Id.Row row, Id.Column column -> { row ; column }
   | _ -> failwith "Invalid arguments"
+;;
