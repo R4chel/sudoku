@@ -26,7 +26,7 @@ let possible_cells board empty_cells value =
 ;;
 
 let possible_cells_of_two_values board empty_cells value1 value2 =
-  Set.inter
+  Set.union
     (possible_cells board empty_cells value1)
     (possible_cells board empty_cells value2)
 ;;
@@ -60,11 +60,7 @@ let set_by_subset board empty unused_values =
       in
       match possible_cells with 
       | [] ->
-        Board.print board;
-        Out_channel.output_string stdout "Potential problem....";
-        Out_channel.newline stdout;
-        (board, empty)
-        (* failwith "No possible cells" *)
+        failwith "No possible cells"
       | [ cell ] ->
         let board = Board.set board value cell in
         let empty = Set.remove empty cell in
@@ -76,6 +72,7 @@ let set_by_subset board empty unused_values =
   board
 
 let set_by_id board id =
+  (* Out_channel.output_string stdout ("Set by id: " ^ (Id.to_string id)); *)
   let filled, empty = filled_and_empty_by_id board id in
   let unused_values = Value.Set.diff Value.all (Value.Set.of_list (Map.data filled)) in
   let num_empty = Board.num_empty board in
@@ -91,6 +88,8 @@ let rec n_choose_2 l =
 ;;
 
 let two_by_two board id =
+  (* Out_channel.output_string stdout ("Two by two: " ^ (Id.to_string id)); *)
+  (* Out_channel.newline stdout; *)
   let filled, empty = filled_and_empty_by_id board id in
   let unused_values = Value.Set.diff Value.all (Value.Set.of_list (Map.data filled)) in
   let possible_value_pairs = n_choose_2 (Set.to_list unused_values) in

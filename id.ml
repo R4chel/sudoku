@@ -20,3 +20,8 @@ let all =
   rows @ columns @ squares
 
 let values = List.range 1 (n + 1)
+
+let to_string = function
+  | Row i -> "Row " ^ Int.to_string i
+  | Column i -> "Column " ^ Int.to_string i
+  | Square i -> "Square " ^ Int.to_string i

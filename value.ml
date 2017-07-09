@@ -12,3 +12,4 @@ let low = 1
 let high = Id.n + 1
 let all = List.range low high |> Set.of_list
 let valid t = Int.between t ~low ~high
+let to_string = Int.to_string
