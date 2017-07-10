@@ -63,7 +63,7 @@ let set_by_ids t value ~row_id ~column_id =
   Cell.Map.add t ~key:(Cell.of_row_column_ids row_id column_id) ~data:value
 ;;
 
-let set t value cell =
+let set t cell value =
   assert (Value.valid value);
   Cell.Map.add t ~key:cell ~data:value
 ;;
